@@ -25,7 +25,8 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip> // to format image names using setw() and setfill()
-#include <io.h>    // to check file existence using POSIX function access(). On Linux include <unistd.h>.
+// #include <io.h>    // to check file existence using POSIX function access(). On Linux include <unistd.h>.
+#include <unistd.h>
 #include <set>
 
 #include "Hungarian.h"
@@ -72,9 +73,9 @@ void TestSORT(string seqName, bool display);
 int main()
 {
 	vector<string> sequences = { "PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2" };
-	for (auto seq : sequences)
-		TestSORT(seq, false);
-	//TestSORT("PETS09-S2L1", true);
+	// for (auto seq : sequences)
+	// 	TestSORT(seq, false);
+	TestSORT("PETS09-S2L1", true);
 
 	// Note: time counted here is of tracking procedure, while the running speed bottleneck is opening and parsing detectionFile.
 	cout << "Total Tracking took: " << total_time << " for " << total_frames << " frames or " << ((double)total_frames / (double)total_time) << " FPS" << endl;
@@ -94,10 +95,10 @@ void TestSORT(string seqName, bool display)
 	for (int i = 0; i < CNUM; i++)
 		rng.fill(randColor[i], RNG::UNIFORM, 0, 256);
 
-	string imgPath = "D:/Data/Track/2DMOT2015/train/" + seqName + "/img1/";
+	string imgPath = "/media/manu/intem/sort/2DMOT2015/train/" + seqName + "/img1/";
 
 	if (display)
-		if (_access(imgPath.c_str(), 0) == -1)
+		if (access(imgPath.c_str(), 0) == -1)
 		{
 			cerr << "Image path not found!" << endl;
 			display = false;
@@ -105,7 +106,7 @@ void TestSORT(string seqName, bool display)
 
 	// 1. read detection file
 	ifstream detectionFile;
-	string detFileName = "data/" + seqName + "/det.txt";
+	string detFileName = "/media/manu/intem/sort/2DMOT2015/train/" + seqName + "/det/det.txt";
 	detectionFile.open(detFileName);
 
 	if (!detectionFile.is_open())
@@ -361,7 +362,7 @@ void TestSORT(string seqName, bool display)
 			for (auto tb : frameTrackingResult)
 				cv::rectangle(img, tb.box, randColor[tb.id % CNUM], 2, 8, 0);
 			imshow(seqName, img);
-			cvWaitKey(40);
+			waitKey(40);
 		}
 	}
 

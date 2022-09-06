@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <float.h>
 
 using namespace std;
 
