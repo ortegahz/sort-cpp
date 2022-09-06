@@ -1,27 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-//  SORT: A Simple, Online and Realtime Tracker
-//  
-//  This is a C++ reimplementation of the open source tracker in
-//  https://github.com/abewley/sort
-//  Based on the work of Alex Bewley, alex@dynamicdetection.com, 2016
-//
-//  Cong Ma, mcximing@sina.cn, 2016
-//  
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//  
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//  
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-///////////////////////////////////////////////////////////////////////////////
-
-
 #include <iostream>
 #include <fstream>
 #include <iomanip> // to format image names using setw() and setfill()
@@ -30,7 +6,7 @@
 #include <set>
 
 #include "matcher.h"
-#include "KalmanTracker.h"
+#include "SwiftTracker.h"
 
 #include "opencv2/video/tracking.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -159,8 +135,8 @@ void TestSORT(string seqName, bool display)
 	int max_age = 1;
 	int min_hits = 3;
 	double iouThreshold = 0.3;
-	vector<KalmanTracker> trackers;
-	KalmanTracker::kf_count = 0; // tracking id relies on this, so we have to reset it in each seq.
+	vector<SwiftTracker> trackers;
+	SwiftTracker::kf_count = 0; // tracking id relies on this, so we have to reset it in each seq.
 
 	// variables used in the for-loop
 	vector<Rect_<float>> predictedBoxes;
@@ -206,7 +182,7 @@ void TestSORT(string seqName, bool display)
 			// initialize kalman trackers using first detections.
 			for (unsigned int i = 0; i < detFrameData[fi].size(); i++)
 			{
-				KalmanTracker trk = KalmanTracker(detFrameData[fi][i].box);
+				SwiftTracker trk = SwiftTracker(detFrameData[fi][i].box);
 				trackers.push_back(trk);
 			}
 			// output the first frame detections
@@ -319,7 +295,7 @@ void TestSORT(string seqName, bool display)
 		// create and initialise new trackers for unmatched detections
 		for (auto umd : unmatchedDetections)
 		{
-			KalmanTracker tracker = KalmanTracker(detFrameData[fi][umd].box);
+			SwiftTracker tracker = SwiftTracker(detFrameData[fi][umd].box);
 			trackers.push_back(tracker);
 		}
 
