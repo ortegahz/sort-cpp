@@ -22,7 +22,7 @@ message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 include_directories("./") 
 
 # Declare the executable target built from your sources
-add_executable(tracker main.cpp Hungarian.cpp KalmanTracker.cpp)
+add_executable(tracker main.cpp matcher.cpp KalmanTracker.cpp)
 
 # Link your application with OpenCV libraries
 target_link_libraries(tracker PRIVATE ${OpenCV_LIBS})

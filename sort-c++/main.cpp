@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <set>
 
-#include "Hungarian.h"
+#include "matcher.h"
 #include "KalmanTracker.h"
 
 #include "opencv2/video/tracking.hpp"
@@ -257,9 +257,9 @@ void TestSORT(string seqName, bool display)
 
 		// solve the assignment problem using hungarian algorithm.
 		// the resulting assignment is [track(prediction) : detection], with len=preNum
-		HungarianAlgorithm HungAlgo;
+		MatchAlgorithm MatchAlgo;
 		assignment.clear();
-		HungAlgo.Solve(iouMatrix, assignment);
+		MatchAlgo.Solve(iouMatrix, assignment);
 
 		// find matches, unmatched_detections and unmatched_predictions
 		unmatchedTrajectories.clear();
