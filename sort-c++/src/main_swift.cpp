@@ -22,6 +22,7 @@ typedef struct TrackBox
 int main()
 {
     vector<TrackBox> data_det;
+    vector<vector<TrackBox>> data_det_sort;
 
     const string seq_name = "PETS09-S2L1";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
@@ -85,6 +86,18 @@ int main()
             num_frame = db.frame_id;
     }
 
+    {
+        vector<TrackBox> vec_tmp;
+        for (int i = 1; i <= num_frame; i++)
+        {
+            for (auto db : data_det)
+                if (db.frame_id == i)
+                    vec_tmp.push_back(db);
+            data_det_sort.push_back(vec_tmp);
+            vec_tmp.clear();
+        }
+    }
+
     if (flag_display)
     {
         for (int i = 1; i <= num_frame; i++)
@@ -92,16 +105,12 @@ int main()
             ostringstream oss;
             oss << data_img_dir << setw(6) << setfill('0') << i;
             Mat img = imread(oss.str() + ".jpg");
-            if (img.empty())
-                continue;
 
-            for (auto db : data_det)
+            for (auto db : data_det_sort[i - 1])
             {
-                if (db.frame_id == i)
-                {
-                    cv::rectangle(img, db.bbox, colors[(db.track_id + 1) % CNUM], 2, 8, 0);
-                    // cout << "db.track_id -> " << db.track_id << " color idx -> " << (db.track_id + 1) % CNUM << endl;
-                }
+                assert(db.frame_id == i);
+                cv::rectangle(img, db.bbox, colors[(db.track_id + 1) % CNUM], 2, 8, 0); // db.track_id + 1 prevent -1 % cnum
+                // cout << "db.track_id -> " << db.track_id << " color idx -> " << (db.track_id + 1) % CNUM << endl;
             }
             imshow(seq_name, img);
             waitKey(40);
