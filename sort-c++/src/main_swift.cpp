@@ -7,6 +7,8 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
+#include "SwiftTracker.h"
+
 using namespace cv;
 using namespace std;
 
@@ -21,10 +23,12 @@ typedef struct TrackBox
 
 int main()
 {
+    SwiftTracker tracker;
+
     vector<TrackBox> data_det;
     vector<vector<TrackBox>> data_det_sort;
 
-    const string seq_name = "PETS09-S2L1";
+    const string seq_name = "TUD-Campus";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
     const string data_img_dir = data_root_dir + seq_name + "/img1/";
     const string data_det_path = data_root_dir + seq_name + "/det/det.txt";
@@ -98,9 +102,10 @@ int main()
         }
     }
 
-    if (flag_display)
+    for (int i = 1; i <= num_frame; i++)
     {
-        for (int i = 1; i <= num_frame; i++)
+        // display detection bboxes
+        if (flag_display)
         {
             ostringstream oss;
             oss << data_img_dir << setw(6) << setfill('0') << i;
@@ -113,8 +118,14 @@ int main()
                 // cout << "db.track_id -> " << db.track_id << " color idx -> " << (db.track_id + 1) % CNUM << endl;
             }
             imshow(seq_name, img);
-            waitKey(40);
         }
+
+        tracker.update();
+
+        // display tracking bboxes
+
+        if (flag_display)
+            waitKey(40);
     }
 
     if (flag_display)
