@@ -70,7 +70,7 @@ void TestSORT(string seqName, bool display);
 
 
 
-int main()
+int main_sort()
 {
 	vector<string> sequences = { "PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2" };
 	// for (auto seq : sequences)

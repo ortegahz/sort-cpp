@@ -19,12 +19,16 @@ message(STATUS "    version: ${OpenCV_VERSION}")
 message(STATUS "    libraries: ${OpenCV_LIBS}")
 message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 
-include_directories("./") 
+include_directories("include") 
+aux_source_directory("src" DIR_SRCS)
+
+# message(STATUS "src path: ${DIR_SRCS}")
 
 # Declare the executable target built from your sources
-add_executable(tracker main.cpp Hungarian.cpp KalmanTracker.cpp)
+add_executable(tracker ${DIR_SRCS})
 
 # Link your application with OpenCV libraries
 target_link_libraries(tracker PRIVATE ${OpenCV_LIBS})
 
+# for gdb dbg
 SET(CMAKE_BUILD_TYPE "Debug")
