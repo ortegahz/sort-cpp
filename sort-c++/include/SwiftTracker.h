@@ -1,6 +1,11 @@
+#pragma once
+
 #include <vector>
+#include <iostream>
 
 #include "opencv2/highgui/highgui.hpp"
+
+#include "dataType.h"
 
 using namespace std;
 using namespace cv;
@@ -9,7 +14,7 @@ class SwiftTracker
 {
 public:
 	SwiftTracker();
-	void update();
+	void update(vector<TrackBox> dets);
 
 private:
 	int max_age;

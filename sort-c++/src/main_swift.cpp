@@ -7,19 +7,13 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
+#include "dataType.h"
 #include "SwiftTracker.h"
 
 using namespace cv;
 using namespace std;
 
 #define CNUM 20
-
-typedef struct TrackBox
-{
-    int frame_id;
-    int track_id;
-    Rect_<float> bbox;
-} TrackBox;
 
 int main()
 {
@@ -120,7 +114,7 @@ int main()
             imshow(seq_name, img);
         }
 
-        tracker.update();
+        tracker.update(data_det_sort[i - 1]);
 
         // display tracking bboxes
 
