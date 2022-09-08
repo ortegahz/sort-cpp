@@ -15,14 +15,20 @@ using namespace std;
 
 #define CNUM 20
 
+int KalmanBoxTracker::count = 0;
+
 int main()
 {
+    double total_time = 0.0;
+	double cycle_time = 0.;
+	double start_time = 0.;
+
     SwiftTracker tracker;
 
     vector<TrackBox> data_det;
     vector<vector<TrackBox>> data_det_sort;
 
-    const string seq_name = "TUD-Campus";
+    const string seq_name = "PETS09-S2L1";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
     const string data_img_dir = data_root_dir + seq_name + "/img1/";
     const string data_det_path = data_root_dir + seq_name + "/det/det.txt";
@@ -73,6 +79,7 @@ int main()
             ss.str("");
 
             db.bbox = Rect_<float>(Point_<float>(x, y), Point_<float>(x + w, y + h));
+            // cout << db.bbox.x << " " << db.bbox.y << " " << db.bbox.width << " " << db.bbox.height << endl;
             data_det.push_back(db);
         }
         fh_det.close();
@@ -98,29 +105,52 @@ int main()
 
     for (int i = 1; i <= num_frame; i++)
     {
-        // display detection bboxes
+        Mat img;
+
         if (flag_display)
         {
             ostringstream oss;
             oss << data_img_dir << setw(6) << setfill('0') << i;
-            Mat img = imread(oss.str() + ".jpg");
-
-            for (auto db : data_det_sort[i - 1])
-            {
-                assert(db.frame_id == i);
-                cv::rectangle(img, db.bbox, colors[(db.track_id + 1) % CNUM], 2, 8, 0); // db.track_id + 1 prevent -1 % cnum
-                // cout << "db.track_id -> " << db.track_id << " color idx -> " << (db.track_id + 1) % CNUM << endl;
-            }
-            imshow(seq_name, img);
+            img = imread(oss.str() + ".jpg");
         }
 
+        // // display detection bboxes
+        // if (flag_display)
+        // {
+        //     Scalar color(0, 0, 255);
+        //     for (auto db : data_det_sort[i - 1])
+        //     {
+        //         assert(db.frame_id == i);
+        //         cv::rectangle(img, db.bbox, color, 2, 8, 0);
+        //     }
+        // }
+
+        start_time = getTickCount();
         tracker.update(data_det_sort[i - 1]);
+		cycle_time = (double)(getTickCount() - start_time);
+		total_time += cycle_time / getTickFrequency();
+
+        // display tracking bboxes
+        if (flag_display)
+        {
+            for (auto tb : tracker.data_preds_post)
+            {
+                cv::rectangle(img, tb.bbox, colors[tb.track_id % CNUM], 2, 8, 0);
+                // cout << tb.track_id << endl;
+            }
+        }
 
         // display tracking bboxes
 
         if (flag_display)
+        {
+            imshow(seq_name, img);
             waitKey(40);
+        }
     }
+
+    cout << "total_time " << total_time << " for " << num_frame << " frames" << endl;
+    cout << (double(num_frame) / total_time) << " fps" << endl;
 
     if (flag_display)
         destroyAllWindows();
