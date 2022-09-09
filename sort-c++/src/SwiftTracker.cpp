@@ -33,16 +33,6 @@ void SwiftTracker::update(vector<TrackBox> dets)
 	data_preds.clear();
 	data_preds_post.clear();
 
-	if (trackers.size() == 0)
-	{
-		for (auto it = dets.begin(); it != dets.end(); it++)
-		{
-			KalmanBoxTracker tracker = KalmanBoxTracker(*it);
-			trackers.push_back(tracker);
-		}
-		goto GEN_RST;
-	}
-
 	for (auto it = trackers.begin(); it != trackers.end();)
 	{
 		TrackBox tbox = (*it).predict();
@@ -57,6 +47,16 @@ void SwiftTracker::update(vector<TrackBox> dets)
 			n_trk -= 1;
 			// cerr << "Box invalid at frame: " << frame_count << endl;
 		}
+	}
+
+	if (trackers.size() == 0)
+	{
+		for (auto it = dets.begin(); it != dets.end(); it++)
+		{
+			KalmanBoxTracker tracker = KalmanBoxTracker(*it);
+			trackers.push_back(tracker);
+		}
+		goto GEN_RST;
 	}
 
 	iou_matrix.resize(n_trk, vector<double>(n_det, 0));

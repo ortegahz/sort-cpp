@@ -70,12 +70,15 @@ void TestSORT(string seqName, bool display);
 
 
 
-int main_sort()
+int main1()
 {
-	vector<string> sequences = { "PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2" };
-	// for (auto seq : sequences)
-	// 	TestSORT(seq, false);
-	TestSORT("PETS09-S2L1", true);
+	// vector<string> sequences = { "PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2" };
+
+	vector<string> sequences = { "PETS09-S2L1"};
+
+	for (auto seq : sequences)
+		TestSORT(seq, true);
+	// TestSORT("PETS09-S2L1", true);
 
 	// Note: time counted here is of tracking procedure, while the running speed bottleneck is opening and parsing detectionFile.
 	cout << "Total Tracking took: " << total_time << " for " << total_frames << " frames or " << ((double)total_frames / (double)total_time) << " FPS" << endl;
@@ -106,7 +109,7 @@ void TestSORT(string seqName, bool display)
 
 	// 1. read detection file
 	ifstream detectionFile;
-	string detFileName = "/media/manu/intem/sort/2DMOT2015/train/" + seqName + "/det/det.txt";
+	string detFileName = "/media/manu/kingstop/workspace/sort/data/train/" + seqName + "/det/det.txt";
 	detectionFile.open(detFileName);
 
 	if (!detectionFile.is_open())
@@ -180,7 +183,7 @@ void TestSORT(string seqName, bool display)
 
 	// prepare result file.
 	ofstream resultsFile;
-	string resFileName = "output/" + seqName + ".txt";
+	string resFileName = "../output/" + seqName + ".txt";
 	resultsFile.open(resFileName);
 
 	if (!resultsFile.is_open())

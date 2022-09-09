@@ -19,142 +19,165 @@ int KalmanBoxTracker::count = 0;
 
 int main()
 {
-    double total_time = 0.0;
-	double cycle_time = 0.;
-	double start_time = 0.;
+    bool flag_display = false;
 
-    SwiftTracker tracker;
-
-    vector<TrackBox> data_det;
-    vector<vector<TrackBox>> data_det_sort;
-
-    const string seq_name = "PETS09-S2L1";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
     const string data_root_dir_det = "/media/manu/kingstop/workspace/sort/data/train/";
-    const string data_img_dir = data_root_dir + seq_name + "/img1/";
-    const string data_det_path = data_root_dir_det + seq_name + "/det/det.txt";
 
-    bool flag_display = true;
-    int num_frame = 0;
+    vector<string> name_seqs = {"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"};
 
-    RNG rng(0xFFFFFFFF);
-    Scalar_<int> colors[CNUM];
+    // vector<string> name_seqs = {"ETH-Pedcross2"};
 
-    cout << "Swift Tracker Algorithm" << endl;
-
-    cout << "processing " << seq_name << " ..." << endl;
-
-    for (int i = 0; i < CNUM; i++)
+    for (auto seq_name : name_seqs)
     {
-        rng.fill(colors[i], RNG::UNIFORM, 0, 255);
-    }
+        double total_time = 0.0;
+        double cycle_time = 0.;
+        double start_time = 0.;
 
-    if (flag_display && (access(data_img_dir.c_str(), 0) == -1))
-    {
-        cerr << "can not find dir " << data_img_dir << endl;
-        flag_display = false;
-    }
+        SwiftTracker tracker;
 
-    {
-        ifstream fh_det;
-        string line;
-        istringstream ss;
+        vector<TrackBox> data_det;
+        vector<vector<TrackBox>> data_det_sort;
 
-        char sps;
-        float x, y, w, h;
+        const string data_img_dir = data_root_dir + seq_name + "/img1/";
+        const string data_det_path = data_root_dir_det + seq_name + "/det/det.txt";
 
-        fh_det.open(data_det_path);
-        if (!fh_det.is_open())
+        ofstream hd_out_file;
+        string name_out_file = "/home/manu/tmp/data/trackers/mot_challenge/MOT15-train/SWIFTTrack/data/" + seq_name + ".txt";
+        hd_out_file.open(name_out_file);
+        if (!hd_out_file.is_open())
         {
-            cerr << "can not find file " << data_det_path << endl;
-            return -1;
+            cerr << "Error: can not create file " << name_out_file << endl;
         }
 
-        while (getline(fh_det, line))
+        int num_frame = 0;
+
+        RNG rng(0xFFFFFFFF);
+        Scalar_<int> colors[CNUM];
+
+        cout << "Swift Tracker Algorithm" << endl;
+
+        cout << "processing " << seq_name << " ..." << endl;
+
+        for (int i = 0; i < CNUM; i++)
         {
-            TrackBox db;
-
-            ss.str(line);
-            ss >> db.frame_id >> sps >> db.track_id >> sps;
-            ss >> x >> sps >> y >> sps >> w >> sps >> h;
-            ss.str("");
-
-            db.bbox = Rect_<float>(Point_<float>(x, y), Point_<float>(x + w, y + h));
-            // cout << db.bbox.x << " " << db.bbox.y << " " << db.bbox.width << " " << db.bbox.height << endl;
-            data_det.push_back(db);
-        }
-        fh_det.close();
-    }
-
-    for (auto db : data_det)
-    {
-        if (num_frame < db.frame_id)
-            num_frame = db.frame_id;
-    }
-
-    {
-        vector<TrackBox> vec_tmp;
-        for (int i = 1; i <= num_frame; i++)
-        {
-            for (auto db : data_det)
-                if (db.frame_id == i)
-                    vec_tmp.push_back(db);
-            data_det_sort.push_back(vec_tmp);
-            vec_tmp.clear();
-        }
-    }
-
-    for (int i = 1; i <= num_frame; i++)
-    {
-        Mat img;
-
-        if (flag_display)
-        {
-            ostringstream oss;
-            oss << data_img_dir << setw(6) << setfill('0') << i;
-            img = imread(oss.str() + ".jpg");
+            rng.fill(colors[i], RNG::UNIFORM, 0, 255);
         }
 
-        // // display detection bboxes
-        // if (flag_display)
-        // {
-        //     Scalar color(0, 0, 255);
-        //     for (auto db : data_det_sort[i - 1])
-        //     {
-        //         assert(db.frame_id == i);
-        //         cv::rectangle(img, db.bbox, color, 2, 8, 0);
-        //     }
-        // }
-
-        start_time = getTickCount();
-        tracker.update(data_det_sort[i - 1]);
-		cycle_time = (double)(getTickCount() - start_time);
-		total_time += cycle_time / getTickFrequency();
-
-        // display tracking bboxes
-        if (flag_display)
+        if (flag_display && (access(data_img_dir.c_str(), 0) == -1))
         {
-            for (auto tb : tracker.data_preds_post)
+            cerr << "can not find dir " << data_img_dir << endl;
+            flag_display = false;
+        }
+
+        {
+            ifstream fh_det;
+            string line;
+            istringstream ss;
+
+            char sps;
+            float x, y, w, h;
+
+            fh_det.open(data_det_path);
+            if (!fh_det.is_open())
             {
-                cv::rectangle(img, tb.bbox, colors[tb.track_id % CNUM], 2, 8, 0);
-                // cout << tb.track_id << endl;
+                cerr << "can not find file " << data_det_path << endl;
+                return -1;
+            }
+
+            while (getline(fh_det, line))
+            {
+                TrackBox db;
+
+                ss.str(line);
+                ss >> db.frame_id >> sps >> db.track_id >> sps;
+                ss >> x >> sps >> y >> sps >> w >> sps >> h;
+                ss.str("");
+
+                db.bbox = Rect_<float>(Point_<float>(x, y), Point_<float>(x + w, y + h));
+                // cout << db.bbox.x << " " << db.bbox.y << " " << db.bbox.width << " " << db.bbox.height << endl;
+                data_det.push_back(db);
+            }
+            fh_det.close();
+        }
+
+        for (auto db : data_det)
+        {
+            if (num_frame < db.frame_id)
+                num_frame = db.frame_id;
+        }
+
+        {
+            vector<TrackBox> vec_tmp;
+            for (int i = 1; i <= num_frame; i++)
+            {
+                for (auto db : data_det)
+                    if (db.frame_id == i)
+                        vec_tmp.push_back(db);
+                data_det_sort.push_back(vec_tmp);
+                vec_tmp.clear();
             }
         }
 
-        // display tracking bboxes
+        for (int i = 1; i <= num_frame; i++)
+        {
+            Mat img;
+
+            if (flag_display)
+            {
+                ostringstream oss;
+                oss << data_img_dir << setw(6) << setfill('0') << i;
+                img = imread(oss.str() + ".jpg");
+            }
+
+            // // display detection bboxes
+            // if (flag_display)
+            // {
+            //     Scalar color(0, 0, 255);
+            //     for (auto db : data_det_sort[i - 1])
+            //     {
+            //         assert(db.frame_id == i);
+            //         cv::rectangle(img, db.bbox, color, 2, 8, 0);
+            //     }
+            // }
+
+            start_time = getTickCount();
+            tracker.update(data_det_sort[i - 1]);
+            cycle_time = (double)(getTickCount() - start_time);
+            total_time += cycle_time / getTickFrequency();
+
+            for (auto tb : tracker.data_preds_post)
+            {
+                hd_out_file << tb.frame_id << "," << tb.track_id << "," << tb.bbox.x << "," << tb.bbox.y << "," << tb.bbox.width << "," << tb.bbox.height << ",1,-1,-1,-1" << endl;
+            }
+
+            // display tracking bboxes
+            if (flag_display)
+            {
+                for (auto tb : tracker.data_preds_post)
+                {
+                    cv::rectangle(img, tb.bbox, colors[tb.track_id % CNUM], 2, 8, 0);
+                    // cout << tb.track_id << endl;
+                }
+            }
+
+            // display tracking bboxes
+
+            if (flag_display)
+            {
+                imshow(seq_name, img);
+                waitKey(40);
+            }
+        }
+
+        cout << "total_time " << total_time << " for " << num_frame << " frames" << endl;
+        cout << (double(num_frame) / total_time) << " fps" << endl;
 
         if (flag_display)
-        {
-            imshow(seq_name, img);
-            waitKey(40);
-        }
+            destroyAllWindows();
+
+        hd_out_file.close();
     }
-
-    cout << "total_time " << total_time << " for " << num_frame << " frames" << endl;
-    cout << (double(num_frame) / total_time) << " fps" << endl;
-
-    if (flag_display)
-        destroyAllWindows();
 
     return 0;
 }

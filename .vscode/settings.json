@@ -17,6 +17,7 @@
         "istream": "cpp",
         "limits": "cpp",
         "mutex": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "fstream": "cpp"
     }
 }

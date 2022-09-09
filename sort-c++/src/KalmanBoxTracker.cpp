@@ -43,6 +43,11 @@ KalmanBoxTracker::KalmanBoxTracker(TrackBox det)
 						  0, 0, 0, 0, 0, 0.01, 0,
 						  0, 0, 0, 0, 0, 0, 0.0001);
 
+	// setIdentity(kf.measurementMatrix);
+	// setIdentity(kf.processNoiseCov, Scalar::all(1e-2));
+	// setIdentity(kf.measurementNoiseCov, Scalar::all(1e-1));
+	// setIdentity(kf.errorCovPost, Scalar::all(1));
+
 	{
 		float bbox[4];
 
