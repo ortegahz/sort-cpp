@@ -5,10 +5,11 @@
 close all; clear;
 
 %%
-opts.dir_seq = '/media/manu/intem/sort/2DMOT2015/train/TUD-Campus';
+opts.dir_seq = '/media/manu/intem/sort/2DMOT2015/train/PETS09-S2L1';
+% opts.dir_seq = '/media/manu/kingstop/workspace/sort/data/train/PETS09-S2L1';
 
 %%
-path_det = fullfile(opts.dir_seq, 'det', 'det.txt');
+path_det = fullfile('/media/manu/kingstop/workspace/sort/data/train/PETS09-S2L1', 'det', 'det.txt');
 
 %%
 % [fid tid x y w h score 3dx 3dy sdz]

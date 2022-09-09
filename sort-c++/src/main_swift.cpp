@@ -30,8 +30,9 @@ int main()
 
     const string seq_name = "PETS09-S2L1";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
+    const string data_root_dir_det = "/media/manu/kingstop/workspace/sort/data/train/";
     const string data_img_dir = data_root_dir + seq_name + "/img1/";
-    const string data_det_path = data_root_dir + seq_name + "/det/det.txt";
+    const string data_det_path = data_root_dir_det + seq_name + "/det/det.txt";
 
     bool flag_display = true;
     int num_frame = 0;
