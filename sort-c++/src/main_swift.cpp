@@ -19,8 +19,8 @@ int KalmanBoxTracker::count = 0;
 
 int main()
 {
-    bool flag_display = true;
-    bool flag_save_video = true;
+    bool flag_display = false;
+    bool flag_save_video = false;
 
     const string path_video_out = "/home/manu/tmp/tracking.flv";
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";

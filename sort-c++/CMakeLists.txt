@@ -31,4 +31,4 @@ add_executable(tracker ${DIR_SRCS})
 target_link_libraries(tracker PRIVATE ${OpenCV_LIBS})
 
 # for gdb dbg
-SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_BUILD_TYPE "Release")
