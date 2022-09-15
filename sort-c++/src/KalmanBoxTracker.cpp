@@ -155,6 +155,11 @@ void KalmanBoxTracker::_convert_x_to_bbox(float *bbox)
 	x2 = bbox[0] + w / 2.;
 	y2 = bbox[1] + h / 2.;
 
+	if (x1 < 0 && bbox[0] > 0)
+		x1 = 0;
+	if (y1 < 0 && bbox[1] > 0)
+		y1 = 0;
+
 	bbox[0] = x1;
 	bbox[1] = y1;
 	bbox[2] = x2;

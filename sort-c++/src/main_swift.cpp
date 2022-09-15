@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <iomanip>
 
+// opencv 4.6.0
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -26,9 +27,9 @@ int main()
     const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
     const string data_root_dir_det = "/media/manu/kingstop/workspace/sort/data/train/";
 
-    // vector<string> name_seqs = {"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"};
+    vector<string> name_seqs = {"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"};
 
-    vector<string> name_seqs = {"ETH-Pedcross2"};
+    // vector<string> name_seqs = {"ETH-Pedcross2"};
 
     for (auto seq_name : name_seqs)
     {
@@ -187,7 +188,7 @@ int main()
             if (flag_display)
             {
                 imshow(seq_name, img);
-                waitKey(10);
+                waitKey(100);
             }
             if (flag_save_video)
             {
