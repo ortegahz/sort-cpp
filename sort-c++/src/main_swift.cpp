@@ -188,7 +188,7 @@ int main()
             if (flag_display)
             {
                 imshow(seq_name, img);
-                waitKey(100);
+                waitKey(40);
             }
             if (flag_save_video)
             {
