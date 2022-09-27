@@ -333,7 +333,8 @@ void LinearAssigner::step4(int *assignment, double *distMatrix, bool *starMatrix
 			if (primeMatrix[primeRow + nOfRows*primeCol])
 				break;
 
-		if (primeCol == nOfColumns) break;
+		/* another delta must be found (ref step5) */
+		// if (primeCol == nOfColumns) break;
 
 		/* star the primed zero */
 		newStarMatrix[primeRow + nOfRows*primeCol] = true;
