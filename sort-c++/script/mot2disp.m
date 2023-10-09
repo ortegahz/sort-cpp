@@ -12,7 +12,7 @@ opts.n_colors = 50;
 
 %%
 % path_det = fullfile('/media/manu/kingstop/workspace/sort/data/train/ETH-Pedcross2', 'det', 'det.txt');
-path_det = '/home/manu/nfs/swift/build/ETH-Pedcross2.txt';
+path_det = '/home/manu/nfs/swift/ETH-Pedcross2.txt';
 
 %%
 % [fid tid x y w h score 3dx 3dy sdz]
@@ -23,7 +23,7 @@ fclose(fileID);
 %%
 colors = colormap(hsv(opts.n_colors));
 
-dir_imgs = fullfile(opts.dir_seq, 'img1');
+dir_imgs = fullfile(opts.dir_seq, 'img1_pg');
 list_img  = struct2cell(dir(fullfile(dir_imgs, '*.jpg')))';
 paths_img = fullfile(dir_imgs, list_img(:, 1));
 

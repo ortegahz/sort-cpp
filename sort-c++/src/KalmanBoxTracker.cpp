@@ -87,7 +87,11 @@ void KalmanBoxTracker::update(TrackBox det)
 		measurement.at<float>(3, 0) = bbox[3];
 
 		// update
-		kf.correct(measurement);
+		// kf.correct(measurement);
+		kf.statePost.at<float>(0, 0) = bbox[0];
+		kf.statePost.at<float>(1, 0) = bbox[1];
+		kf.statePost.at<float>(2, 0) = bbox[2];
+		kf.statePost.at<float>(3, 0) = bbox[3];
 	}
 }
 
@@ -97,7 +101,8 @@ TrackBox KalmanBoxTracker::predict()
 	{
 		kf.statePost.at<float>(6, 0) *= 0;
 	}
-	Mat prediction = kf.predict();
+	// Mat prediction = kf.predict();
+	Mat prediction = kf.statePost;
 	age += 1;
 	if (time_since_update > 0)
 		hit_streak = 0;

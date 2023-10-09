@@ -1,0 +1,24 @@
+# cross compile
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake ..
+cmake -DCMAKE_TOOLCHAIN_FILE=../aarch64-gnu.toolchain.cmake ..
+make -j32 && cp ./tracker /home/manu/nfs/swift -rvf
+
+# run rv1126
+ssh root@192.168.1.66
+busybox mount -t nfs 192.168.1.82:/home/manu/nfs /mnt_manu -o nolock && cd /mnt_manu/swift
+export LD_LIBRARY_PATH=/mnt_manu/opencv_install_rv1126/lib:$LD_LIBRARY_PATH
+./tracker
+
+# run rk3588
+ssh root@192.168.1.186
+busybox mount -t nfs 192.168.1.82:/home/manu/nfs /mnt_manu -o nolock && cd /mnt_manu/swift
+export LD_LIBRARY_PATH=/mnt_manu/opencv_install_rk3588/lib:$LD_LIBRARY_PATH
+./tracker
+
+# run hi3519a
+export LC_ALL=C
+telnet 192.168.1.98 11023
+busybox mount -t nfs 192.168.1.82:/home/manu/nfs /mnt_manu -o nolock && cd /mnt_manu/swift
+export LD_LIBRARY_PATH=/mnt_manu/opencv_install_hi3519a/lib:$LD_LIBRARY_PATH
+./tracker

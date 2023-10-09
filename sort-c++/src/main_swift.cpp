@@ -23,13 +23,13 @@ int main()
     bool flag_display = false;
     bool flag_save_video = false;
 
-    const string path_video_out = "/home/manu/tmp/tracking.flv";
-    const string data_root_dir = "/media/manu/intem/sort/2DMOT2015/train/";
-    const string data_root_dir_det = "/media/manu/kingstop/workspace/sort/data/train/";
+    const string path_video_out = "./tracking.flv";
+    const string data_root_dir = "/mnt_manu/data/train/";
+    const string data_root_dir_det = "/mnt_manu/data/train/";
 
-    vector<string> name_seqs = {"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"};
+    // vector<string> name_seqs = {"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof", "ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17", "ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"};
 
-    // vector<string> name_seqs = {"ETH-Pedcross2"};
+    vector<string> name_seqs = {"ETH-Pedcross2"};
 
     for (auto seq_name : name_seqs)
     {
@@ -48,7 +48,7 @@ int main()
 
         if (flag_save_video)
         {
-            hd_vw.open(path_video_out, codec, 25, Size(1280, 720));
+            hd_vw.open(path_video_out, codec, 25, Size(1920, 1080));
             if (!hd_vw.isOpened())
             {
                 cerr << "Could not open the output video file for write\n";
@@ -56,11 +56,11 @@ int main()
             }
         }
 
-        const string data_img_dir = data_root_dir + seq_name + "/img1/";
-        const string data_det_path = data_root_dir_det + seq_name + "/det/det.txt";
+        const string data_img_dir = data_root_dir + seq_name + "/img1_pg/";
+        const string data_det_path = data_root_dir_det + seq_name + "/det_pg/det_pg.txt";
 
         ofstream hd_out_file;
-        string name_out_file = "/home/manu/tmp/data/trackers/mot_challenge/MOT15-train/SWIFTTrack/data/" + seq_name + ".txt";
+        string name_out_file = "./" + seq_name + ".txt";
         hd_out_file.open(name_out_file);
         if (!hd_out_file.is_open())
         {
@@ -169,7 +169,7 @@ int main()
             }
 
             // display tracking bboxes
-            if (flag_display)
+            if ((flag_display) || (flag_save_video))
             {
                 for (auto tb : tracker.data_preds_post)
                 {
